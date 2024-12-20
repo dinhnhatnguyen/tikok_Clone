@@ -1,0 +1,7 @@
+
+CREATE TABLE videos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    s3_url TEXT NOT NULL,
+    created_at DATETIME NOT NULL
+);
