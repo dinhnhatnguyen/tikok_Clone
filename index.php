@@ -5,7 +5,10 @@ require_once __DIR__ . '/app/config/S3Config.php';
 require_once __DIR__ . '/app/controllers/VideoController.php';
 require_once __DIR__ . '/app/controllers/UserController.php';
 
+// Khởi tạo kết nối dữ liệu
 $db = (new Database())->getConnection();
+
+// Khởi tạo những class để xử lý file với AWS S3
 $s3Config = new S3Config();
 $s3Client = $s3Config->getS3Client();
 
@@ -38,11 +41,23 @@ switch ($action) {
         $userController->logout();
         break;
     case 'follow':
-        if (!$user_id) {
-            throw new Exception('User Id is required');
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
         }
-        $userController($user_id, null);
+
+        if (!$user_id) {
+            $_SESSION['error'] = 'User ID is required';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+
+        $userController->follow($user_id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']); // Quay lại trang trước đó
+        exit;
         break;
+
+
     case 'profile':
         $userController->profile($_SESSION['username'] ?? null);
         break;

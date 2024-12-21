@@ -2,6 +2,13 @@
   --primary: #fe2c55;
   --dark-bg: #121212;
   --sidebar-width: 240px;
+  --inactive-text: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Màu cho các text không hoạt động */
+  --active-text: #fe2c55; /* Màu cho text khi active */
 }
 
 body {
@@ -152,7 +159,6 @@ body {
 
 .video-container {
   max-width: 500px;
-
   margin: 0 auto;
   position: relative;
   height: calc(100vh - 60px);
@@ -229,14 +235,31 @@ body {
   object-fit: cover;
 }
 
+/* Follow button */
 .follow-button {
-  background: var(--primary);
+  text-decoration: none; /* Bỏ gạch chân */
+  display: inline-block;
+  background-color: var(--primary);
   color: white;
   border: none;
-  padding: 3px 16px;
   border-radius: 4px;
-  font-weight: 600;
+  padding: 6px 16px;
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.follow-button.following {
+  background-color: #393939;
+}
+
+.follow-button:hover {
+  background-color: #d1294a; /* Khi hover vào, màu sẽ tối hơn */
+}
+
+.follow-button.following:hover {
+  background-color: #2a2a2a; /* Khi hover vào, nút 'following' sẽ tối hơn */
 }
 
 /* Comments modal */

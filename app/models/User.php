@@ -1,23 +1,24 @@
 <?php
 
-
-
-class User {
+class User
+{
     private $db;
     private $table_name = "users";
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
     }
 
-    public function create($data) {
+    public function create($data)
+    {
         try {
             $sql = "INSERT INTO " . $this->table_name . " 
                     (username, email, password, full_name, avatar_url) 
                     VALUES (:username, :email, :password, :full_name, :avatar_url)";
-                    
+
             $stmt = $this->db->prepare($sql);
-            
+
             return $stmt->execute([
                 ':username' => htmlspecialchars(strip_tags($data['username'])),
                 ':email' => htmlspecialchars(strip_tags($data['email'])),
@@ -31,7 +32,8 @@ class User {
     }
 
     // Đăng ký người dùng
-    public function register($username, $email, $password, $fullName = null, $avatarUrl = null) {
+    public function register($username, $email, $password, $fullName = null, $avatarUrl = null)
+    {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         $sql = "INSERT INTO users (username, email, password, full_name, avatar_url) VALUES (:username, :email, :password, :fullName, :avatarUrl)";
@@ -46,7 +48,8 @@ class User {
     }
 
     // Đăng nhập người dùng
-    public function login($email, $password) {
+    public function login($email, $password)
+    {
         $sql = "SELECT * FROM users WHERE email = :email AND is_active = true";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
@@ -59,7 +62,8 @@ class User {
     }
 
     // Theo dõi người dùng khác
-    public function follow($followerId, $followedId) {
+    public function follow($followerId, $followedId)
+    {
         if ($followerId === $followedId) {
             return false; // Không thể tự theo dõi chính mình
         }
@@ -73,7 +77,8 @@ class User {
     }
 
     // Bỏ theo dõi người dùng khác
-    public function unfollow($followerId, $followedId) {
+    public function unfollow($followerId, $followedId)
+    {
         $sql = "DELETE FROM follows WHERE follower_id = :followerId AND followed_id = :followedId";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -83,7 +88,8 @@ class User {
     }
 
     // Kiểm tra trạng thái theo dõi
-    public function isFollowing($followerId, $followedId) {
+    public function isFollowing($followerId, $followedId)
+    {
         $sql = "SELECT 1 FROM follows WHERE follower_id = :followerId AND followed_id = :followedId";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -94,7 +100,8 @@ class User {
     }
 
     // Lấy danh sách người theo dõi
-    public function getFollowers($userId) {
+    public function getFollowers($userId)
+    {
         $sql = "SELECT users.* FROM follows INNER JOIN users ON follows.follower_id = users.id WHERE follows.followed_id = :userId";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':userId' => $userId]);
@@ -102,7 +109,8 @@ class User {
     }
 
     // Lấy danh sách người đang theo dõi
-    public function getFollowing($userId) {
+    public function getFollowing($userId)
+    {
         $sql = "SELECT users.* FROM follows INNER JOIN users ON follows.followed_id = users.id WHERE follows.follower_id = :userId";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':userId' => $userId]);
@@ -111,7 +119,8 @@ class User {
 
 
 
-    public function findByEmail($email) {
+    public function findByEmail($email)
+    {
         $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
@@ -119,7 +128,8 @@ class User {
     }
 
     // Tìm người dùng theo tên đăng nhập
-    public function findByUsername($username) {
+    public function findByUsername($username)
+    {
         $sql = "SELECT * FROM users WHERE username = :username";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':username' => $username]);
@@ -127,7 +137,8 @@ class User {
     }
 
     // Tìm người dùng theo ID
-    public function findById($userId) {
+    public function findById($userId)
+    {
         $sql = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $userId]);
@@ -135,13 +146,14 @@ class User {
     }
 
     // Cập nhật thông tin người dùng
-    public function update($userId, $updates) {
+    public function update($userId, $updates)
+    {
         $set = [];
         foreach ($updates as $key => $value) {
             $set[] = "$key = :$key";
         }
         $setSql = implode(', ', $set);
-        
+
         $sql = "UPDATE users SET $setSql WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $updates['id'] = $userId;
@@ -149,7 +161,8 @@ class User {
     }
 
     // Lấy thông tin người dùng (profile)
-    public function getProfile($username) {
+    public function getProfile($username)
+    {
         $sql = "SELECT * FROM users WHERE username = :username";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':username' => $username]);
@@ -157,7 +170,8 @@ class User {
     }
 
     // Lấy video của người dùng
-    public function getUserVideos($userId) {
+    public function getUserVideos($userId)
+    {
         $sql = "SELECT * FROM videos WHERE user_id = :userId";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':userId' => $userId]);
@@ -165,7 +179,8 @@ class User {
     }
 
     // Lấy thống kê người dùng
-    public function getUserStats($userId) {
+    public function getUserStats($userId)
+    {
         // Thống kê có thể bao gồm số lượng video, người theo dõi, v.v.
         // Ví dụ đơn giản:
         return [
@@ -175,7 +190,8 @@ class User {
     }
 
     // Đếm số lượng video của người dùng
-    private function countUserVideos($userId) {
+    private function countUserVideos($userId)
+    {
         $sql = "SELECT COUNT(*) FROM videos WHERE user_id = :userId";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':userId' => $userId]);
@@ -183,7 +199,8 @@ class User {
     }
 
     // Thay đổi theo dõi
-    public function toggleFollow($followerId, $followedId) {
+    public function toggleFollow($followerId, $followedId)
+    {
         if ($this->isFollowing($followerId, $followedId)) {
             return $this->unfollow($followerId, $followedId);
         } else {

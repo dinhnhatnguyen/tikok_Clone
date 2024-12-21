@@ -113,19 +113,22 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
                 <?php if (isset($_SESSION['user_id']) && isset($followings) && is_array($followings)): ?>
                     <?php if (empty($followings)): ?>
                         <div class="sidebar-login">
+                            <h5 style="margin-bottom: 20px;">Following</h5>
                             <p>You haven't followed anyone yet, start following now!</p>
                         </div>
-                    <?php endif; ?>
-                    <div class="sidebar-login" style="margin: 20px 0">
-                        <?php foreach ($followings as $following): ?>
-                            <div class="comment-header">
-                                <img src="<?php echo htmlspecialchars($following['avatar_url']); ?>" class="comment-avatar" alt="User">
-                                <div>
-                                    <div class="comment-username"><?php echo htmlspecialchars($following['full_name']); ?></div>
+                    <?php else: ?>
+                        <div class="sidebar-login" style="margin: 20px 0">
+                            <h5 style="margin-bottom: 20px;">Following</h5>
+                            <?php foreach ($followings as $following): ?>
+                                <div class="comment-header">
+                                    <img src="<?php echo htmlspecialchars($following['avatar_url']); ?>" class="comment-avatar" alt="User">
+                                    <div>
+                                        <div class="comment-username"><?php echo htmlspecialchars($following['full_name']); ?></div>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php else: ?>
                     <div class="sidebar-login">
                         <p>Log in to follow creators, like videos, and view comments.</p>
@@ -184,15 +187,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
                             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $video['user_id']): ?>
                                 <?php
                                 $isFollowing = (new User($db))->isFollowing($_SESSION['user_id'], $video['user_id']);
-                                if (!$isFollowing):
                                 ?>
-                                    <button class="follow-button"
-                                        data-user-id="<?php echo $video['user_id']; ?>"
-                                        onclick="followUser(<?php echo $video['user_id']; ?>)">
-                                        Follow
-                                    </button>
-                                <?php endif; ?>
+                                <a href="index.php?action=follow&user_id=<?php echo $video['user_id']; ?>"
+                                    class="follow-button <?php echo $isFollowing ? 'following' : ''; ?>">
+                                    <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                                </a>
                             <?php endif; ?>
+
+
 
 
                         </div>
@@ -287,36 +289,78 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
                 const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 
 
-                async function followUser(userId) {
-                    if (!isLoggedIn) {
-                        window.location.href = 'index.php?action=login';
-                        return;
-                    }
+                // async function followUser(userId) {
+                //     if (!isLoggedIn) {
+                //         window.location.href = 'index.php?action=login';
+                //         return;
+                //     }
 
-                    try {
-                        const response = await fetch(`index.php?action=follow&userId=${userId}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
+                //     try {
+                //         const response = await fetch(`index.php?action=follow&userId=${userId}`, {
+                //             method: 'POST',
+                //             headers: {
+                //                 'Content-Type': 'application/json',
+                //                 'X-Requested-With': 'XMLHttpRequest'
+                //             }
+                //         });
 
-                        const data = await response.json();
+                //         const data = await response.json();
 
-                        if (data.error) {
-                            throw new Error(data.error);
-                        }
+                //         if (data.error) {
+                //             throw new Error(data.error);
+                //         }
 
-                        // Sau khi follow thành công, reload để cập nhật UI
-                        window.location.reload();
+                //         // Sau khi follow thành công, reload để cập nhật UI
+                //         window.location.reload();
 
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Failed to update follow status. Please try again.');
-                    }
-                }
+                //     } catch (error) {
+                //         console.error('Error:', error);
+                //         alert('Failed to update follow status. Please try again.');
+                //     }
+                // }
             });
+
+            async function followUser(userId) {
+                if (!isLoggedIn) {
+                    window.location.href = 'index.php?action=login';
+                    return;
+                }
+
+                const button = document.querySelector(`button[data-user-id="${userId}"]`);
+                if (!button) return;
+
+                try {
+                    const response = await fetch(`index.php?action=follow&user_id=${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Update button state
+                    button.classList.toggle('following');
+                    button.textContent = data.isFollowing ? 'Following' : 'Follow';
+
+                    // Update followers count if present
+                    const followersCount = document.querySelector('.followers-count');
+                    if (followersCount) {
+                        const currentCount = parseInt(followersCount.textContent);
+                        followersCount.textContent = data.isFollowing ? currentCount + 1 : currentCount - 1;
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to update follow status. Please try again.');
+                }
+            }
         </script>
 </body>
 
