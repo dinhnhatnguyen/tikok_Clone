@@ -45,27 +45,7 @@ class UserController {
         require_once __DIR__ . '/../views/users/register.php';
     }
     
-    // public function login() {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         try {
-    //             $user = $this->user->findByEmail($_POST['email']);
-                
-    //             if (!$user || !password_verify($_POST['password'], $user['password'])) {
-    //                 throw new Exception('Invalid email or password');
-    //             }
-                
-    //             // Set session
-    //             $_SESSION['user_id'] = $user['id'];
-    //             $_SESSION['username'] = $user['username'];
-                
-    //             header('Location: /');
-    //             exit;
-    //         } catch (Exception $e) {
-    //             return ['error' => $e->getMessage()];
-    //         }
-    //     }
-    //     require_once __DIR__ . '/../views/users/login.php';
-    // }
+    
     public function login() {
         $error = null; // Initialize error variable
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

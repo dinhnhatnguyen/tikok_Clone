@@ -10,21 +10,6 @@ class User {
         $this->db = $db;
     }
 
-    // public function create($data) {
-    //     $sql = "INSERT INTO " . $this->table_name . " 
-    //             (username, email, password, full_name, avatar_url) 
-    //             VALUES (:username, :email, :password, :full_name, :avatar_url)";
-                
-    //     $stmt = $this->db->prepare($sql);
-        
-    //     return $stmt->execute([
-    //         ':username' => htmlspecialchars(strip_tags($data['username'])),
-    //         ':email' => htmlspecialchars(strip_tags($data['email'])),
-    //         ':password' => $data['password'],
-    //         ':full_name' => htmlspecialchars(strip_tags($data['full_name'])),
-    //         ':avatar_url' => $data['avatar_url']
-    //     ]);
-    // }
     public function create($data) {
         try {
             $sql = "INSERT INTO " . $this->table_name . " 

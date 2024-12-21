@@ -1,153 +1,93 @@
 <?php
 // views/users/profile.php
 ?>
-
-<div class="profile-container">
-    <div class="profile-header">
-        <img src="<?= htmlspecialchars($user['avatar_url'] ?? '/assets/default-avatar.png') ?>" 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/public/css/user/profile.css" rel="stylesheet">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="<?= htmlspecialchars($user['avatar_url'] ?? '/assets/default-avatar.png') ?>" 
              alt="<?= htmlspecialchars($user['username']) ?>" 
              class="profile-avatar">
              
-        <div class="profile-info">
-            <h1><?= htmlspecialchars($user['username']) ?></h1>
-            <h2><?= htmlspecialchars($user['full_name']) ?></h2>
-            
-            <?php if ($user['id'] === $_SESSION['user_id']): ?>
-                <a href="/profile/edit" class="edit-profile-btn">Edit Profile</a>
-            <?php else: ?>
-                <button class="follow-btn <?= $isFollowing ? 'following' : '' ?>"
-                        data-user-id="<?= $user['id'] ?>">
-                    <?= $isFollowing ? 'Following' : 'Follow' ?>
-                </button>
-            <?php endif; ?>
-            
-            <div class="profile-stats">
-                <div class="stat">
-                    <span class="count"><?= number_format($user['followers_count']) ?></span>
-                    <span class="label">Followers</span>
+            <div class="profile-info">
+                <h1><?= htmlspecialchars($user['username']) ?></h1>
+                <h2><?= htmlspecialchars($user['full_name']) ?></h2>
+                
+                <div class="button-group">
+                    <button class="edit-profile-btn">Edit Profile</button>
+                    <button class="share-profile-btn">
+                        <i class="fas fa-share"></i>
+                    </button>
                 </div>
-                <div class="stat">
-                    <span class="count"><?= number_format($user['following_count']) ?></span>
-                    <span class="label">Following</span>
-                </div>
-                <div class="stat">
-                    <span class="count"><?= number_format($user['videos_count']) ?></span>
-                    <span class="label">Videos</span>
-                </div>
-            </div>
-            
-            <?php if ($user['bio']): ?>
-                <p class="profile-bio"><?= nl2br(htmlspecialchars($user['bio'])) ?></p>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <div class="profile-content">
-        <div class="video-grid">
-            <?php foreach ($videos as $video): ?>
-                <div class="video-thumbnail">
-                    <a href="/video/<?= $video['id'] ?>">
-                        <img src="<?= htmlspecialchars($video['thumbnail_url']) ?>" 
-                             alt="<?= htmlspecialchars($video['title']) ?>">
-                        <div class="video-stats">
-                            <span><i class="fas fa-heart"></i> <?= number_format($video['likes_count']) ?></span>
-                        </div>
-                    </a>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="count">1.2M</span>
+                        <span class="label">Followers</span>
                     </div>
-            <?php endforeach; ?>
+                    <div class="stat">
+                        <span class="count">824</span>
+                        <span class="label">Following</span>
+                    </div>
+                    <div class="stat">
+                        <span class="count">2.1M</span>
+                        <span class="label">Likes</span>
+                    </div>
+                </div>
+                
+                <p class="profile-bio">🎥 Content Creator | 🎮 Gamer<br>✨ Making awesome videos daily<br>📧 business@johndoe.com</p>
+            </div>
         </div>
-    </div>
 
-
-    <!-- Tabs for different content types -->
-    <div class="profile-tabs">
-        <button class="tab-btn active" data-tab="videos">
-            <i class="fas fa-video"></i> Videos
-        </button>
-        <button class="tab-btn" data-tab="liked">
-            <i class="fas fa-heart"></i> Liked
-        </button>
-        <?php if ($user['id'] === $_SESSION['user_id']): ?>
+        <div class="profile-tabs">
+            <button class="tab-btn active" data-tab="videos">
+                <i class="fas fa-video"></i> Videos
+            </button>
+            <button class="tab-btn" data-tab="liked">
+                <i class="fas fa-heart"></i> Liked
+            </button>
             <button class="tab-btn" data-tab="private">
                 <i class="fas fa-lock"></i> Private
             </button>
-        <?php endif; ?>
-    </div>
+        </div>
 
-    <!-- Tab content containers -->
-    <div class="tab-content" id="videos-content">
-        <div class="video-grid">
-            <?php if (empty($videos)): ?>
-                <div class="empty-state">
-                    <i class="fas fa-video"></i>
-                    <p>No videos yet</p>
-                    <?php if ($user['id'] === $_SESSION['user_id']): ?>
-                        <a href="/upload" class="upload-btn">Upload a video</a>
-                    <?php endif; ?>
-                </div>
-            <?php else: ?>
-                <?php foreach ($videos as $video): ?>
-                    <div class="video-item">
-                        <div class="video-thumbnail" data-video-id="<?= $video['id'] ?>">
-                            <img src="<?= htmlspecialchars($video['thumbnail_url']) ?>" 
-                                 alt="<?= htmlspecialchars($video['title']) ?>">
-                            <div class="video-duration"><?= formatDuration($video['duration']) ?></div>
-                            <div class="video-overlay">
-                                <div class="video-stats">
-                                    <span><i class="fas fa-heart"></i> <?= number_format($video['likes_count']) ?></span>
-                                    <span><i class="fas fa-comment"></i> <?= number_format($video['comments_count']) ?></span>
-                                </div>
+        <div class="tab-content active" id="videos-content">
+            <div class="video-grid">
+            <?php foreach ($videos as $video): ?>
+                <!-- Video Items -->
+                <div class="video-item">
+                    <div class="video-thumbnail">
+                        <img src="<?= htmlspecialchars($video['thumbnail_url']) ?>" 
+                        alt="<?= htmlspecialchars($video['title']) ?>">
+                        <div class="video-overlay">
+                            <div class="video-stats">
+                                <span><i class="fas fa-heart"></i> 124.5K</span>
+                                <span><i class="fas fa-comment"></i> 1.2K</span>
                             </div>
                         </div>
-                        <div class="video-info">
-                            <h3><?= htmlspecialchars($video['title']) ?></h3>
-                            <p><?= formatDate($video['created_at']) ?></p>
-                        </div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <div class="tab-content hidden" id="liked-content">
-        <div class="video-grid">
-            <?php if (empty($likedVideos)): ?>
-                <div class="empty-state">
-                    <i class="fas fa-heart"></i>
-                    <p>No liked videos yet</p>
+                    <div class="video-info">
+                        <h3><?=htmlspecialchars($video['title'])?></h3>
+                        <p>2 days ago</p>
+                    </div>
                 </div>
-            <?php else: ?>
-                <?php foreach ($likedVideos as $video): ?>
-                    <!-- Similar structure to videos grid -->
-                    <div class="video-item">
-                        <!-- Video thumbnail and info -->
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <?php if ($user['id'] === $_SESSION['user_id']): ?>
-        <div class="tab-content hidden" id="private-content">
-            <div class="video-grid">
-                <?php if (empty($privateVideos)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-lock"></i>
-                        <p>No private videos</p>
-                    </div>
-                <?php else: ?>
-                    <?php foreach ($privateVideos as $video): ?>
-                        <!-- Similar structure to videos grid -->
-                        <div class="video-item">
-                            <!-- Video thumbnail and info -->
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <!-- Repeat video items -->
+            <?php endforeach; ?>
             </div>
         </div>
-    <?php endif; ?>    
+    </div>
 
-</div>
+</body>
+
 
 <!-- Share Profile Modal -->
 <div class="modal" id="shareModal">
