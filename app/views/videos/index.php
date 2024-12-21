@@ -1,23 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Video List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Clone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/public/css/video.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Videos</h1>
-    <a href="index.php?action=upload">Upload New Video</a>
-    
-    <div class="videos">
-        <?php while($row = $videos->fetch(PDO::FETCH_ASSOC)): ?>
-            <div class="video">
-                <h3><?php echo $row['title']; ?></h3>
-                <video width="320" height="240" controls>
-                    <source src="<?php echo $row['s3_url']; ?>" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <p>Uploaded: <?php echo $row['created_at']; ?></p>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/public/assets/logo.png" alt="TikTok" height="42">
+            </a>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search accounts and videos">
             </div>
-        <?php endwhile; ?>
+            <div class="d-flex align-items-center gap-3">
+                <a class="btn btn-danger" href="index.php?action=login" style="text-decoration: none;">Log in</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main container -->
+    <div class="container-fluid" style="margin-top: 60px">
+        <!-- Sidebar -->
+        <div class="sidebar">
+        <div class="nav flex-column">
+            <!-- Main Navigation Items -->
+            <div class="main-nav-items">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-home"></i>
+                    For You
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="fa-regular fa-compass"></i>
+                    Explore
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="fa-solid fa-user-group"></i>
+                    Following
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="fas fa-video"></i>
+                    LIVE
+                </a>
+            </div>
+
+            <div class="nav-divider"></div>
+
+            <!-- Secondary Navigation Items -->
+            <div class="secondary-nav-items">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-fire"></i>
+                    Trending
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="fas fa-music"></i>
+                    Music
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="fas fa-gamepad"></i>
+                    Gaming
+                </a>
+                <a class="nav-link" href="index.php?action=upload">
+                <i class="fa-solid fa-square-plus"></i>
+                    Upload video
+                </a>
+            </div>
+
+            <!-- Login Section -->
+            <div class="sidebar-login">
+                <p>Log in to follow creators, like videos, and view comments.</p>
+                <a class="btn-login" href="index.php?action=login" style="text-decoration: none;">Log in</a>
+            </div>
+        </div>
     </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <?php foreach ($videos as $video): ?>
+            <div class="video-container">
+                <video 
+                    class="video-player" 
+                    src="<?php echo htmlspecialchars($video['s3_url']); ?>"
+                    poster="<?php echo htmlspecialchars($video['thumbnail_url']); ?>"
+                    loop
+                    playsinline
+                ></video>
+
+                <!-- Action buttons -->
+                <div class="action-buttons">
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <span class="action-count">45.4K</span>
+                    </div>
+                    <div class="action-button" data-bs-toggle="modal" data-bs-target="#commentsModal">
+                        <div class="action-icon">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <span class="action-count">327</span>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <span class="action-count">5530</span>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-share"></i>
+                        </div>
+                        <span class="action-count">Share</span>
+                    </div>
+                </div>
+
+                <!-- Video info -->
+                <div class="video-info">
+                    <div class="user-info">
+                        <img class="user-avatar" src="<?php echo htmlspecialchars($video['avatar_url']); ?>" alt="<?php echo htmlspecialchars($video['username']); ?>">
+                        <span class="fw-bold"><?php echo htmlspecialchars($video['username']); ?></span>
+                        <button class="follow-button">Follow</button>
+                    </div>
+                    <p class="video-description mb-0">
+                        <?php echo htmlspecialchars($video['description']); ?>
+                    </p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div class="modal fade" id="commentsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">327 comments</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Sample comments -->
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <img src="/api/placeholder/32/32" class="comment-avatar" alt="User">
+                            <div>
+                                <div class="comment-username">user123</div>
+                                <div class="comment-time">2d ago</div>
+                            </div>
+                        </div>
+                        <div class="comment-content">
+                            This is amazing! 🔥
+                        </div>
+                    </div>
+                    <!-- More comments can be added here -->
+                </div>
+                <div class="modal-footer">
+                    <div class="comment-input-container">
+                        <input type="text" class="comment-input" placeholder="Add comment...">
+                        <button class="post-comment-btn">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle video playback
+            const videos = document.querySelectorAll('.video-player');
+            videos.forEach(video => {
+                video.addEventListener('click', function() {
+                    if (video.paused) {
+                        videos.forEach(v => v.pause());
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+            });
+
+            // Handle likes
+            const likeButtons = document.querySelectorAll('.like-button');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    button.classList.toggle('text-danger');
+                });
+            });
+
+            // Infinite scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelector('video').play();
+                    } else {
+                        entry.target.querySelector('video').pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.video-container').forEach(container => {
+                observer.observe(container);
+            });
+        });
+    </script>
 </body>
 </html>

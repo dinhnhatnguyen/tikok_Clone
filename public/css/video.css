@@ -1,0 +1,347 @@
+:root {
+  --primary: #fe2c55;
+  --dark-bg: #121212;
+  --sidebar-width: 240px;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: black;
+  border-bottom: 1px solid #2f2f2f;
+  padding: 0 20px;
+  height: 60px;
+}
+
+.search-box {
+  background-color: #1f1f1f;
+  border: 1px solid #2f2f2f;
+  border-radius: 92px;
+  padding: 0 16px;
+  width: 380px;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 12px 0;
+  width: 100%;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+/* Sidebar styles */
+.sidebar {
+  background-color: black;
+  border-right: 1px solid #2f2f2f;
+  height: calc(100vh - 60px);
+  position: fixed;
+  width: var(--sidebar-width);
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-link {
+  color: var(--inactive-text);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: white;
+}
+
+.nav-link i {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+/* Active state styling */
+.nav-link.active {
+  color: var(--active-text);
+  background-color: transparent;
+}
+
+.nav-link.active i {
+  color: var(--active-text);
+}
+
+/* Add specific styles for each nav item */
+.nav-item {
+  margin: 2px 0;
+}
+
+.nav-divider {
+  height: 1px;
+  background-color: #2f2f2f;
+  margin: 10px 0;
+}
+
+/* Style adjustments for the main navigation items */
+.main-nav-items .nav-link {
+  font-weight: 700;
+}
+
+.secondary-nav-items .nav-link {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Login section at bottom of sidebar */
+.sidebar-login {
+  padding: 20px;
+  border-top: 1px solid #2f2f2f;
+  margin-top: 20px;
+}
+
+.sidebar-login p {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.sidebar-login .btn-login {
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-login .btn-login:hover {
+  background-color: rgba(254, 44, 85, 0.06);
+}
+
+/* Main content */
+.main-content {
+  margin-left: var(--sidebar-width);
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.main-content::-webkit-scrollbar {
+  display: none;
+}
+
+.video-container {
+  max-width: 500px;
+
+  margin: 0 auto;
+  position: relative;
+  height: calc(100vh - 60px);
+}
+
+.video-player {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+/* Action buttons */
+.action-buttons {
+  position: absolute;
+  right: -70px;
+  bottom: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.action-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.2s;
+}
+
+.action-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.action-count {
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Video info */
+.video-info {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+  max-width: 80%;
+  z-index: 10;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.follow-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 3px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Comments modal */
+.modal-dialog {
+  position: fixed;
+  right: 0;
+  margin: 0;
+  height: 100vh;
+  width: 400px;
+}
+
+.modal-content {
+  height: 100vh;
+  border-radius: 0;
+  background-color: #1f1f1f;
+  color: white;
+}
+
+.modal-header {
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #2f2f2f;
+  padding: 16px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-body {
+  padding: 0;
+  overflow-y: auto;
+}
+
+.comment-item {
+  padding: 16px;
+  border-bottom: 1px solid #2f2f2f;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.comment-username {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.comment-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.comment-content {
+  font-size: 14px;
+  margin-left: 44px;
+}
+
+.modal-footer {
+  background-color: #1f1f1f;
+  border-top: 1px solid #2f2f2f;
+  padding: 12px 16px;
+}
+
+.comment-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.comment-input {
+  flex: 1;
+  background-color: #2f2f2f;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.comment-input:focus {
+  outline: none;
+}
+
+.post-comment-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
