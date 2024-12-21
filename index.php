@@ -15,6 +15,10 @@ $userController = new UserController($db, $s3Client);
 
 // Xác định hành động từ URL
 $action = $_GET['action'] ?? 'index';
+$user_id = $_GET['user_id'] ?? null;
+$username = $_GET['username'] ?? null;
+
+
 
 // Gọi hàm tương ứng
 switch ($action) {
@@ -29,6 +33,15 @@ switch ($action) {
         break;
     case 'login':
         $userController->login();
+        break;
+    case 'logout':
+        $userController->logout();
+        break;
+    case 'follow':
+        if (!$user_id) {
+            throw new Exception('User Id is required');
+        }
+        $userController($user_id, null);
         break;
     case 'profile':
         $userController->profile($_SESSION['username'] ?? null);
