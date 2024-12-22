@@ -19,18 +19,27 @@ class User
 
             $stmt = $this->db->prepare($sql);
 
-            return $stmt->execute([
+            // Add debug logging
+            error_log("Attempting to create user: " . print_r($data, true));
+
+            $result = $stmt->execute([
                 ':username' => htmlspecialchars(strip_tags($data['username'])),
                 ':email' => htmlspecialchars(strip_tags($data['email'])),
                 ':password' => $data['password'],
                 ':full_name' => htmlspecialchars(strip_tags($data['full_name'])),
                 ':avatar_url' => $data['avatar_url']
             ]);
+
+            if (!$result) {
+                error_log("Database error: " . print_r($stmt->errorInfo(), true));
+            }
+
+            return $result;
         } catch (PDOException $e) {
+            error_log("Database exception: " . $e->getMessage());
             throw new Exception("Database error: " . $e->getMessage());
         }
     }
-
     // Đăng ký người dùng
     public function register($username, $email, $password, $fullName = null, $avatarUrl = null)
     {

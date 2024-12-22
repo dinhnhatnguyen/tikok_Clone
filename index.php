@@ -23,6 +23,7 @@ $username = $_GET['username'] ?? null;
 
 
 
+
 // Gọi hàm tương ứng
 switch ($action) {
     case 'upload':
@@ -56,10 +57,46 @@ switch ($action) {
         header('Location: ' . $_SERVER['HTTP_REFERER']); // Quay lại trang trước đó
         exit;
         break;
-
-
     case 'profile':
         $userController->profile($_SESSION['username'] ?? null);
+        break;
+
+    case 'delete':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        $videoId = $_GET['id'] ?? null;
+        if (!$videoId) {
+            $_SESSION['error'] = 'Video ID is required';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+
+        $videoController->delete($videoId);
+        break;
+    case 'edit':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        $videoId = $_GET['id'] ?? null;
+        if (!$videoId) {
+            $_SESSION['error'] = 'Video ID is required';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+
+        $videoController->edit($videoId);
+        break;
+
+    case 'incrementViewCount':
+        $videoId = $_GET['video_id'] ?? null;
+        if ($videoId) {
+            $videoController->incrementViewCount($videoId);
+        }
         break;
     default:
         $videoController->index();

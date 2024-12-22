@@ -36,18 +36,21 @@ class UserController
                     'avatar_url' => $avatarUrl
                 ];
 
-                if ($this->user->create($userData)) {
-                    $_SESSION['success'] = 'Registration successful! Please login.';
-                    header('Location: index.php?action=login');
-                    exit;
+                if (!$this->user->create($userData)) {
+                    throw new Exception('Failed to create user account');
                 }
+
+                $_SESSION['success'] = 'Registration successful! Please login.';
+                header('Location: index.php?action=login');
+                exit;
             } catch (Exception $e) {
-                return ['error' => $e->getMessage()];
+                $error = $e->getMessage();
+                require_once __DIR__ . '/../views/users/register.php';
+                return;
             }
         }
         require_once __DIR__ . '/../views/users/register.php';
     }
-
 
     public function login()
     {
@@ -163,61 +166,6 @@ class UserController
         $user = $this->user->findById($_SESSION['user_id']);
         require_once __DIR__ . '/../views/users/edit.php';
     }
-
-    // public function follow($userId)
-    // {
-    //     if (!isset($_SESSION['user_id'])) {
-    //         header('Content-Type: application/json');
-    //         echo json_encode(['error' => 'Unauthorized']);
-    //         return;
-    //     }
-
-    //     try {
-    //         $result = $this->user->toggleFollow($_SESSION['user_id'], $userId);
-    //         header('Content-Type: application/json');
-    //         echo json_encode($result);
-    //     } catch (Exception $e) {
-    //         header('Content-Type: application/json');
-    //         echo json_encode(['error' => $e->getMessage()]);
-    //     }
-    // }
-
-    // public function follow($userId)
-    // {
-    //     if (!isset($_SESSION['user_id'])) {
-    //         header('Content-Type: application/json');
-    //         echo json_encode(['error' => 'Unauthorized']);
-    //         exit;
-    //     }
-
-    //     try {
-    //         $currentUserId = $_SESSION['user_id'];
-
-    //         // Don't allow following yourself
-    //         if ($currentUserId == $userId) {
-    //             throw new Exception('You cannot follow yourself');
-    //         }
-
-    //         // Check if user exists
-    //         $targetUser = $this->user->findById($userId);
-    //         if (!$targetUser) {
-    //             throw new Exception('User not found');
-    //         }
-
-    //         $result = $this->user->toggleFollow($currentUserId, $userId);
-    //         $isFollowing = $this->user->isFollowing($currentUserId, $userId);
-
-    //         header('Content-Type: application/json');
-    //         echo json_encode([
-    //             'success' => true,
-    //             'isFollowing' => $isFollowing,
-    //             'message' => $isFollowing ? 'Successfully followed user' : 'Successfully unfollowed user'
-    //         ]);
-    //     } catch (Exception $e) {
-    //         header('Content-Type: application/json');
-    //         echo json_encode(['error' => $e->getMessage()]);
-    //     }
-    // }
 
     public function follow($userId)
     {

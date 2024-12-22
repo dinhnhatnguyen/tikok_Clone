@@ -6,17 +6,9 @@ require_once __DIR__ . '/../../controllers/UserController.php';
 require_once __DIR__ . '/../../config/S3helper.php';
 
 
-// Initialize Database and controllers
 $database = new Database();
 $db = $database->getConnection();
 
-
-
-// Handle follow action
-if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userId'])) {
-    $userController->follow($_GET['userId']);
-    exit;
-}
 
 ?>
 
@@ -30,7 +22,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
     <title>TikTok Clone</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/public/css/video.css" rel="stylesheet">
+    <link href="/public/css/video/video.css" rel="stylesheet">
 </head>
 
 <body>
@@ -65,7 +57,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
             <div class="nav flex-column">
                 <!-- Main Navigation Items -->
                 <div class="main-nav-items">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="/">
                         <i class="fas fa-home"></i>
                         For You
                     </a>
@@ -222,7 +214,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
                         <!-- Sample comments -->
                         <div class="comment-item">
                             <div class="comment-header">
-                                <img src="/api/placeholder/32/32" class="comment-avatar" alt="User">
+                                <img src="https://titokclone.s3.ap-southeast-1.amazonaws.com/avatars/IMG_4671%202.JPG" class="comment-avatar" alt="User">
                                 <div>
                                     <div class="comment-username">user123</div>
                                     <div class="comment-time">2d ago</div>
@@ -288,36 +280,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'follow' && isset($_GET['userI
 
                 const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 
-
-                // async function followUser(userId) {
-                //     if (!isLoggedIn) {
-                //         window.location.href = 'index.php?action=login';
-                //         return;
-                //     }
-
-                //     try {
-                //         const response = await fetch(`index.php?action=follow&userId=${userId}`, {
-                //             method: 'POST',
-                //             headers: {
-                //                 'Content-Type': 'application/json',
-                //                 'X-Requested-With': 'XMLHttpRequest'
-                //             }
-                //         });
-
-                //         const data = await response.json();
-
-                //         if (data.error) {
-                //             throw new Error(data.error);
-                //         }
-
-                //         // Sau khi follow thành công, reload để cập nhật UI
-                //         window.location.reload();
-
-                //     } catch (error) {
-                //         console.error('Error:', error);
-                //         alert('Failed to update follow status. Please try again.');
-                //     }
-                // }
             });
 
             async function followUser(userId) {

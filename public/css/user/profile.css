@@ -17,15 +17,13 @@
 body {
   background-color: var(--dark-bg);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .profile-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--dark-bg);
 }
 
 .profile-header {
@@ -54,62 +52,46 @@ body {
 
 .profile-info h1 {
   font-size: 32px;
-  font-weight: 700;
-  margin: 0 0 8px;
+  margin-bottom: 8px;
   color: var(--text-primary);
 }
 
 .profile-info h2 {
   font-size: 18px;
   color: var(--text-secondary);
-  margin: 0 0 20px;
+  margin-bottom: 20px;
 }
 
 .button-group {
   display: flex;
   gap: 16px;
   align-items: center;
-}
-
-.edit-profile-btn,
-.follow-btn,
-.share-profile-btn {
-  padding: 12px 32px;
-  border-radius: 24px;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
+  flex-wrap: wrap;
 }
 
 .edit-profile-btn {
+  padding: 12px 32px;
+  border-radius: 24px;
   background-color: transparent;
   border: 2px solid var(--primary);
   color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .edit-profile-btn:hover {
   background-color: var(--hover-bg);
 }
 
-.follow-btn {
-  background-color: var(--primary);
-  color: white;
-}
-
-.follow-btn.following {
-  background-color: transparent;
-  border: 2px solid var(--text-secondary);
-  color: var(--text-secondary);
-}
-
 .share-profile-btn {
-  background-color: transparent;
-  border: 2px solid var(--text-secondary);
-  color: var(--text-secondary);
   padding: 12px;
   border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--text-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .share-profile-btn:hover {
@@ -165,7 +147,7 @@ body {
   font-size: 16px;
   color: var(--text-secondary);
   border-bottom: 2px solid transparent;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .tab-btn:hover {
@@ -181,14 +163,6 @@ body {
   margin-right: 8px;
 }
 
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -200,7 +174,8 @@ body {
   background: var(--dark-surface-2);
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  position: relative;
+  transition: transform 0.2s;
 }
 
 .video-item:hover {
@@ -210,8 +185,6 @@ body {
 .video-thumbnail {
   position: relative;
   padding-top: 177.77%;
-  background: var(--dark-surface);
-  overflow: hidden;
 }
 
 .video-thumbnail img {
@@ -223,17 +196,6 @@ body {
   object-fit: cover;
 }
 
-.video-duration {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.75);
-  color: white;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
 .video-overlay {
   position: absolute;
   bottom: 0;
@@ -242,7 +204,7 @@ body {
   padding: 16px;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s;
 }
 
 .video-item:hover .video-overlay {
@@ -260,20 +222,47 @@ body {
   color: var(--primary);
 }
 
-.video-info {
-  padding: 16px;
+.video-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-.video-info h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-  color: var(--text-primary);
+.video-item:hover .video-actions {
+  opacity: 1;
 }
 
-.video-info p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 14px;
+.video-actions a {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.edit-btn {
+  background: rgba(0, 123, 255, 0.7);
+}
+
+.delete-btn {
+  background: rgba(255, 0, 0, 0.7);
+}
+
+.edit-btn:hover {
+  background: rgba(0, 123, 255, 0.9);
+}
+
+.delete-btn:hover {
+  background: rgba(255, 0, 0, 0.9);
 }
 
 .empty-state {
@@ -286,126 +275,4 @@ body {
   font-size: 48px;
   color: var(--primary);
   margin-bottom: 16px;
-}
-
-.empty-state p {
-  margin: 8px 0 24px;
-}
-
-.upload-btn {
-  display: inline-block;
-  padding: 12px 32px;
-  background-color: var(--primary);
-  color: white;
-  text-decoration: none;
-  border-radius: 24px;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
-}
-
-.upload-btn:hover {
-  opacity: 0.9;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
-}
-
-.modal-content {
-  position: relative;
-  background: var(--dark-surface);
-  max-width: 500px;
-  margin: 100px auto;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h3 {
-  margin: 0 0 24px;
-  font-size: 24px;
-}
-
-.share-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.share-btn {
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: var(--dark-surface-2);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.share-btn:hover {
-  background: var(--hover-bg);
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.share-btn i {
-  margin-right: 8px;
-}
-
-.copy-link {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.copy-link input {
-  flex: 1;
-  padding: 12px;
-  background: var(--dark-surface-2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: var(--text-primary);
-}
-
-#copyLink {
-  padding: 12px 24px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-#copyLink:hover {
-  opacity: 0.9;
-}
-
-.modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  transition: color 0.2s ease;
-}
-
-.modal-close:hover {
-  color: var(--primary);
-}
-
-.hidden {
-  display: none;
 }
