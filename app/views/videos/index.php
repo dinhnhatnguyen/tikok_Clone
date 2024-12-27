@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../controllers/VideoController.php';
 require_once __DIR__ . '/../../controllers/UserController.php';
 require_once __DIR__ . '/../../config/S3helper.php';
 
-
+//
 $database = new Database();
 $db = $database->getConnection();
 
@@ -292,6 +292,7 @@ $db = $database->getConnection();
                 if (!button) return;
 
                 try {
+                    // Send follow request to server
                     const response = await fetch(`index.php?action=follow&user_id=${userId}`, {
                         method: 'POST',
                         headers: {
@@ -310,13 +311,6 @@ $db = $database->getConnection();
                     // Update button state
                     button.classList.toggle('following');
                     button.textContent = data.isFollowing ? 'Following' : 'Follow';
-
-                    // Update followers count if present
-                    const followersCount = document.querySelector('.followers-count');
-                    if (followersCount) {
-                        const currentCount = parseInt(followersCount.textContent);
-                        followersCount.textContent = data.isFollowing ? currentCount + 1 : currentCount - 1;
-                    }
 
                 } catch (error) {
                     console.error('Error:', error);

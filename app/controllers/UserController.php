@@ -82,29 +82,7 @@ class UserController
 
     function logout()
     {
-
-
-        // Xóa tất cả dữ liệu trong session
-        $_SESSION = array();
-
-        // Xóa session bằng cách huỷ cookie session (nếu có)
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
-            );
-        }
-
-        // Huỷ bỏ toàn bộ session
         session_destroy();
-
-        // Chuyển hướng về trang đăng nhập hoặc trang chính
         header("Location: /");
         exit();
     }
@@ -177,19 +155,20 @@ class UserController
         try {
             $currentUserId = $_SESSION['user_id'];
 
-            // Không cho phép follow chính mình
+            // Don't allow following yourself
             if ($currentUserId == $userId) {
                 $_SESSION['error'] = 'You cannot follow yourself';
                 return false;
             }
 
-            // Kiểm tra user tồn tại
+            // Check if user exists
             $targetUser = $this->user->findById($userId);
             if (!$targetUser) {
                 $_SESSION['error'] = 'User not found';
                 return false;
             }
 
+            // Follow or unfollow
             $this->user->toggleFollow($currentUserId, $userId);
             return true;
         } catch (Exception $e) {

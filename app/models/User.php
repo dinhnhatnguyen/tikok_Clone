@@ -217,8 +217,3 @@ class User
         }
     }
 }
-
-// Ví dụ sử dụng:
-// $db = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');
-// $user = new User($db);
-// $user->register('john_doe', 'john@example.com', 'securepassword');

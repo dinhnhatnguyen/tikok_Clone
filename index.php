@@ -29,9 +29,6 @@ switch ($action) {
     case 'upload':
         $videoController->upload();
         break;
-    case 'feed':
-        $videoController->feed();
-        break;
     case 'register':
         $userController->register();
         break;
@@ -90,13 +87,6 @@ switch ($action) {
         }
 
         $videoController->edit($videoId);
-        break;
-
-    case 'incrementViewCount':
-        $videoId = $_GET['video_id'] ?? null;
-        if ($videoId) {
-            $videoController->incrementViewCount($videoId);
-        }
         break;
     default:
         $videoController->index();

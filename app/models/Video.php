@@ -93,24 +93,6 @@ class Video
 
 
 
-    public function getFeed($page = 1, $limit = 10)
-    {
-        $offset = ($page - 1) * $limit;
-        $sql = "SELECT v.*, u.username, u.avatar_url, 
-                (SELECT COUNT(*) FROM likes WHERE video_id = v.id) as likes_count,
-                (SELECT COUNT(*) FROM comments WHERE video_id = v.id) as comments_count
-                FROM " . $this->table_name . " v
-                JOIN users u ON v.user_id = u.id
-                ORDER BY v.created_at DESC 
-                LIMIT :limit OFFSET :offset";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     public function search($query, $page = 1, $limit = 10)
     {

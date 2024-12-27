@@ -38,13 +38,13 @@ class VideoController
 
     public function upload()
     {
-        // Nếu là GET request, hiển thị form upload
+        // If it is a GET request, display the upload form
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             require_once __DIR__ . '/../views/videos/upload.php';
             return;
         }
 
-        // Xử lý POST request
+        // POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if (!isset($_SESSION['user_id'])) {
@@ -53,7 +53,7 @@ class VideoController
 
                 $this->validateUpload($_FILES['video'] ?? null);
 
-                // Upload video lên S3 
+                // Upload video to S3 
                 $videoUrl = $this->s3Helper->fileUpload('videos/', $_FILES['video']);
 
                 // Generate và upload thumbnail
@@ -65,13 +65,12 @@ class VideoController
                         'tmp_name' => $thumbnailPath
                     ]);
                 } finally {
-                    // Luôn cleanup file thumbnail dù upload thành công hay thất bại
+                    // Always delete tmp thumbnail file
                     if (file_exists($thumbnailPath)) {
                         unlink($thumbnailPath);
                     }
                 }
 
-                // Lưu thông tin vào database
                 $this->video->title = $_POST['title'] ?? $_FILES['video']['name'];
                 $this->video->description = $_POST['description'] ?? '';
                 $this->video->user_id = $_SESSION['user_id'];
@@ -83,16 +82,16 @@ class VideoController
                     throw new Exception('Failed to save video information');
                 }
 
-                // Xóa file thumbnail tạm
+                // Delete tmp thumbnail file
                 if (file_exists($thumbnailPath)) {
                     unlink($thumbnailPath);
                 }
 
-                // Redirect về trang chủ với thông báo thành công
+                // Redirect to home page with success nontification
                 header('Location: index.php?controller=video&action=index&success=1');
                 exit;
             } catch (Exception $e) {
-                // Redirect lại trang upload với thông báo lỗi
+                // Redirect to upload page with fail nontification
                 header('Location: index.php?controller=video&action=upload&error=' . urlencode($e->getMessage()));
                 exit;
             }
@@ -108,8 +107,8 @@ class VideoController
             throw new Exception('Upload error code: ' . $file['error']);
         }
 
-        // Validate file size (e.g., 100MB limit)
-        if ($file['size'] > 100 * 1024 * 1024) {
+        // Validate file size (e.g., 500MB limit)
+        if ($file['size'] > 500 * 1024 * 1024) {
             throw new Exception('File size exceeds limit.');
         }
 
@@ -121,7 +120,7 @@ class VideoController
     }
     private function generateThumbnail($videoPath)
     {
-        // Tạo thư mục temp nếu chưa có
+        // Create a temporary directory if it doesn't exist
         $tempDir = __DIR__ . '/../storage/temp';
         if (!file_exists($tempDir)) {
             mkdir($tempDir, 0777, true);
@@ -134,6 +133,10 @@ class VideoController
         $thumbnailPath = escapeshellarg($thumbnailPath);
 
         // Generate thumbnail using ffmpeg
+        // - `-i`: Specifies the input file
+        // - `-ss 00:00:01`: Captures a frame at the 1-second mark
+        // - `-vframes 1`: Limits output to a single frame
+        // - `2>&1`: Redirects error output for debugging purposes
         $command = "ffmpeg -i {$videoPath} -ss 00:00:01 -vframes 1 {$thumbnailPath} 2>&1";
 
         exec($command, $output, $returnCode);
@@ -144,15 +147,6 @@ class VideoController
         }
 
         return trim($thumbnailPath, "'");
-    }
-
-    public function feed()
-    {
-        $page = $_GET['page'] ?? 1;
-        $limit = 10;
-        $videos = $this->video->getFeed($page, $limit);
-        header('Content-Type: application/json');
-        echo json_encode($videos);
     }
 
 
